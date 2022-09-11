@@ -3,6 +3,7 @@
 #include "Character.h"
 #include "Prop.h"
 #include "Enemy.h"
+#include <string>
 
 int main()
 {
@@ -21,15 +22,31 @@ int main()
 
     Prop props[2]{
         Prop{Vector2{800.f, 500.f}, LoadTexture("nature_tileset/Rock.png")},
-        Prop{Vector2{600.f, 700.f}, LoadTexture("nature_tileset/Log.png")}
-    };
+        Prop{Vector2{600.f, 700.f}, LoadTexture("nature_tileset/Log.png")}};
 
     Enemy goblin{
-        Vector2{},
+        Vector2{800.f, 300.f},
         LoadTexture("characters/goblin_idle_spritesheet.png"),
         LoadTexture("characters/goblin_run_spritesheet.png"),
     };
-    goblin.setTarget(&knight);
+
+    Enemy slime{
+        Vector2{500.f, 700.f},
+        LoadTexture("characters/slime_idle_spritesheet.png"),
+        LoadTexture("characters/slime_run_spritesheet.png"),
+    };
+
+    // creates Enemy pointers
+    Enemy *enemies[]{
+        // initializes the array with & to get the address of the enemy
+        &goblin,
+        &slime};
+
+    // range based for loop
+    for (auto enemy : enemies)
+    {
+        enemy->setTarget(&knight);
+    }
 
     SetTargetFPS(60);
 
@@ -50,13 +67,26 @@ int main()
             prop.Render(knight.getWorldPos());
         }
 
+        if (!knight.getAlive()) // Character is not alive
+        {
+            DrawText("Game Over!", 55.f, 45.f, 40, RED);
+            EndDrawing();
+            continue; // we are in a while loop - this will ignore the rest of the loop and the next iteration will start
+        }
+        else // Character is alive
+        {
+            std::string knightsHealth = "Health: ";
+            knightsHealth.append(std::to_string(knight.getHealth()), 0, 5);
+            DrawText(knightsHealth.c_str(), 55.f, 45.f, 40, RED);
+        }
+
         knight.tick(GetFrameTime());
 
         // check map bounds
-        if (knight.getWorldPos().x < 0.f || 
-        knight.getWorldPos().y < 0.f || 
-        knight.getWorldPos().x + windowWidth > map.width * mapScale || 
-        knight.getWorldPos().y + windowHeight > map.height * mapScale)
+        if (knight.getWorldPos().x < 0.f ||
+            knight.getWorldPos().y < 0.f ||
+            knight.getWorldPos().x + windowWidth > map.width * mapScale ||
+            knight.getWorldPos().y + windowHeight > map.height * mapScale)
         {
             knight.undoMovement();
         }
@@ -69,14 +99,20 @@ int main()
                 knight.undoMovement();
             }
         }
-        
-        goblin.tick(GetFrameTime());
+
+        for (auto enemy : enemies)
+        {
+            enemy->tick(GetFrameTime());
+        }
 
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            if (CheckCollisionRecs(goblin.getCollisionRec(), knight.getWeaponCollisionRec()))
+            for (auto enemy : enemies)
             {
-                goblin.setAlive(false);
+                if (CheckCollisionRecs(enemy->getCollisionRec(), knight.getWeaponCollisionRec()))
+                {
+                    enemy->setAlive(false);
+                }
             }
         }
 

@@ -2,6 +2,7 @@
 #define BASE_CHARACTER_H
 #include "raylib.h"
 
+
 class BaseCharacter
 {
 public:
