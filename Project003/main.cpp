@@ -84,6 +84,7 @@ int main()
 
     int velocity{0};
 
+    // background channels
     Texture2D background = LoadTexture("textures/far-buildings.png");
     Texture2D midground = LoadTexture("textures/back-buildings.png");
     Texture2D foreground = LoadTexture("textures/foreground.png");
