@@ -3,7 +3,6 @@
 #include "Character.h"
 #include "Prop.h"
 #include "Enemy.h"
-#include "BaseCharacter.h"
 
 int main()
 {
@@ -30,6 +29,7 @@ int main()
         LoadTexture("characters/goblin_idle_spritesheet.png"),
         LoadTexture("characters/goblin_run_spritesheet.png"),
     };
+    goblin.setTarget(&knight);
 
     SetTargetFPS(60);
 
