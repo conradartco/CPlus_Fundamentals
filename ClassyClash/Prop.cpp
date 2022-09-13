@@ -21,6 +21,6 @@ Rectangle Prop::getCollisionRec(Vector2 knightPos)
         screenPos.x,
         screenPos.y,
         texture.width * scale,
-        texture.height * scale
+        (texture.height * scale) - 45.f
     };
 }

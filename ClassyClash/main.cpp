@@ -15,7 +15,7 @@ int main()
 
     // load background
     Texture2D map = LoadTexture("nature_tileset/WorldMap.png");
-    Vector2 mapPos{0.0, 0.0};
+    Vector2 mapPos{0.f, 0.f};
     const float mapScale{4.0f};
 
     Character knight{windowWidth, windowHeight};
